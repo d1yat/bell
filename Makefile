@@ -1,5 +1,5 @@
 all: main.o
-	[ ! -d dist ] && mkdir dist
+	mkdir -p dist
 	gcc -o dist/bell main.o
 
 main.o: main.c
