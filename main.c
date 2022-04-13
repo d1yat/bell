@@ -19,10 +19,6 @@ struct Node *tail;
 int main()
 {
     tail = NULL;
-    // add_jadwal("07:00");
-    // add_jadwal("10:00");
-    // add_jadwal("13:00");
-    // print_jadwal();
 
     FILE *file = fopen("sample-data.csv", "r");
     char line[1024];
@@ -34,7 +30,6 @@ int main()
     int m = tm->tm_mon + 1;
     int y = tm->tm_year + 1900;
     int day = dayofweek(d, m, y);
-    // printf("The time is %s\n", get_hari(day));
 
     while (fgets(line, 1024, file))
     {
@@ -60,7 +55,6 @@ int main()
             if (baris_hari == hari_ini && column > 1)
             {
                 add_jadwal(value);
-                // printf("%s ", value);
             }
 
             value = strtok(NULL, ",");
@@ -111,7 +105,6 @@ void add_jadwal(char *jam)
         node->next = temp;
     }
 
-    // free(temp);
 }
 
 char *get_hari(int hari)
