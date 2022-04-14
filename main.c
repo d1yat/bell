@@ -3,6 +3,16 @@
 #include <time.h>
 #include <stdlib.h>
 
+#define MAX_SIZE 1024
+
+typedef struct
+{
+    int key;
+    char value[100];
+} DICT;
+
+enum week { Sun = 0, Mon, Tue, Wed, Thur, Fri, Sat };
+
 struct Node
 {
     char *jam;
@@ -12,16 +22,18 @@ struct Node
 void add_jadwal(char *jam);
 void print_jadwal();
 int dayofweek(int d, int m, int y);
-char *get_hari(int hari);
+char *get_hari(enum week hari);
 
 struct Node *tail;
 
 int main()
 {
+    DICT list[100];
+    int counter = 0;
     tail = NULL;
 
     FILE *file = fopen("sample-data.csv", "r");
-    char line[1024];
+    char lines[MAX_SIZE];
     int row = 0;
     int column = 0;
     time_t t = time(NULL);
@@ -31,7 +43,7 @@ int main()
     int y = tm->tm_year + 1900;
     int day = dayofweek(d, m, y);
 
-    while (fgets(line, 1024, file))
+    while (fgets(lines, 1024, file))
     {
         column = 0;
         row++;
@@ -41,9 +53,10 @@ int main()
             continue;
         }
 
-        char *value = strtok(line, ",");
+        char *value = strtok(lines, ",");
+        // enum week today = Mon;
 
-        while (value != NULL)
+        while (value)
         {
             column++;
 
@@ -54,18 +67,21 @@ int main()
             // column > 1  = lewati kolom pertama
             if (baris_hari == hari_ini && column > 1)
             {
-                add_jadwal(value);
+                list[counter].key = counter;
+                strcpy(list[counter].value, value);
+                counter++;
             }
 
             value = strtok(NULL, ",");
         }
-
-        printf("\n");
     }
 
     fclose(file);
-    print_jadwal();
     
+    for (int i = 0; i < 3; i++)
+    {
+        printf("(%d) => %s\n", list[i].key, list[i].value);
+    }
 
     return 0;
 }
@@ -107,38 +123,33 @@ void add_jadwal(char *jam)
 
 }
 
-char *get_hari(int hari)
+char *get_hari(enum week hari)
 {
+    // enum week { Sun = 0, Mon, Tue, Wed, Thur, Fri, Sat };
+    // enum is zero based index (0, 1, 2, 3, 4, 5, 6)
+
     switch (hari)
     {
-    case 0:
+    case Sun:
         return "Minggu";
-    case 1:
+    case Mon:
         return "Senin";
-    case 2:
+    case Tue:
         return "Selasa";
-    case 3:
+    case Wed:
         return "Rabu";
-    case 4:
+    case Thur:
         return "Kamis";
-    case 5:
+    case Fri:
         return "Jumat";
-    case 6:
+    case Sat:
         return "Sabtu";
     }
 }
 
 int dayofweek(int d, int m, int y)
 {
-    /*
-     * 0 = Minggu
-     * 1 = Senin
-     * 2 = Selasa
-     * 3 = Rabu
-     * 4 = Kamis
-     * 5 = Jumat
-     * 6 = Sabtu
-     */
+    // Minggu = 0, Senin, Selasa, Rabu, Kamis, Jumat, Sabtu
 
     static int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
     y -= m < 3;
