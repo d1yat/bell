@@ -2,3 +2,4 @@
 *.stackdump
 *.o
 .vscode
+sample-data.csv
